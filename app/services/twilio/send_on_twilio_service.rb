@@ -15,6 +15,8 @@ class Twilio::SendOnTwilioService < Base::SendOnChannelService
   end
 
   def message_params
+    puts 'New Message'
+    puts message
     params = {
       body: message.content,
       from: channel.phone_number,

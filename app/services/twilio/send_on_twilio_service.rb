@@ -25,10 +25,10 @@ class Twilio::SendOnTwilioService < Base::SendOnChannelService
     puts message.attachments.map(&:file_url)
 
     params = {
-      body: message.content,
+      # body: message.content,
       from: channel.phone_number,
       to: contact_inbox.source_id,
-      media_url: message.attachments.map(&:file_url)
+      media_url: [message.attachments.map(&:file_url)]
     }
     # params[:media_url] = attachments if message.attachments.present?
     params

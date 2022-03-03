@@ -25,10 +25,10 @@ class Twilio::SendOnTwilioService < Base::SendOnChannelService
     # puts message.attachments.map(&:file_url)
     # message.attachments.map(&:file_url)
     params = {
-      body: message.content,
+      # body: message.content,
       from: channel.phone_number,
-      to: contact_inbox.source_id
-      # media_url: 'https://amiloz-chatwoot-custom.herokuapp.com//rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWHc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--902b3a558b8d4b9136c0ef09326d159f80f46049/Screen%20Shot%202022-03-01%20at%2016.21.55.png'
+      to: contact_inbox.source_id,
+      media_url: ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80']
     }
     # params[:media_url] = attachments if message.attachments.present?
     params

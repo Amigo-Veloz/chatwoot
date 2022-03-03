@@ -16,7 +16,7 @@ export const getAlertAudio = async () => {
   };
 
   try {
-    const response = await axios.get('/dashboard/audios/ding.mp3', {
+    const response = await axios.get('/dashboard/audios/ding_new.mp3', {
       responseType: 'arraybuffer',
     });
 

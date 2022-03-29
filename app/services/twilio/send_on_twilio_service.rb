@@ -20,37 +20,33 @@ class Twilio::SendOnTwilioService < Base::SendOnChannelService
 
   def message_params
     puts 'New Message'
-    # puts message.content
-
-    # puts 'Attachments'
-    # puts message.attachments
     
     params = {
       body: message.content,
       from: channel.phone_number,
-      to: contact_inbox.source_id,
-      # media_url: ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80']
+      to: contact_inbox.source_id
     }
     
-    if message.attachments.present?
+    hasAttachments = false
+    hasAttachments = true if message.attachments.present?
+    
+    if hasAttachments
       puts 'message attachments present'
 
-    u = URI.parse(attachments)
+      u = URI.parse(attachments)
 
-    h = Net::HTTP.new u.host, u.port
-    h.use_ssl = u.scheme == 'https'
+      h = Net::HTTP.new u.host, u.port
+      h.use_ssl = u.scheme == 'https'
 
-    head = h.start do |ua|
-      ua.head u.path
-    end
-
-    puts head['location']
-    #
+      head = h.start do |ua|
+        ua.head u.path
+      
+      puts head['location']
   
-    params[:media_url] = head['location'] if message.attachments.present?
-    puts 'Message Attachments' if message.attachments.present?
-    puts attachments if message.attachments.present?
-    puts ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'] if message.attachments.present?
+      params[:media_url] = head['location'] if message.attachments.present?
+      puts 'Message Attachments' if message.attachments.present?
+      puts attachments if message.attachments.present?
+      puts ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'] if message.attachments.present?
 
     puts params
     params

@@ -32,8 +32,10 @@ class Twilio::SendOnTwilioService < Base::SendOnChannelService
       # media_url: ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80']
     }
     
-    #
-    u = URI.parse('https://amiloz-chatwoot-custom.herokuapp.com//rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWVE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--5ddeac0d527d25aad942d2d1860e1ea8943979a3/download.png')
+    if message.attachments.present?
+      puts 'message attachments present'
+
+    u = URI.parse(attachments)
 
     h = Net::HTTP.new u.host, u.port
     h.use_ssl = u.scheme == 'https'

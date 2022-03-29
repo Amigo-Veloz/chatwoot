@@ -1,3 +1,7 @@
+require 'net/http'
+require 'net/https' if RUBY_VERSION < '1.9'
+require 'uri'
+
 class Twilio::SendOnTwilioService < Base::SendOnChannelService
   private
 
@@ -28,7 +32,20 @@ class Twilio::SendOnTwilioService < Base::SendOnChannelService
       # media_url: ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80']
     }
     
-    params[:media_url] = attachments if message.attachments.present?
+    #
+    u = URI.parse('https://amiloz-chatwoot-custom.herokuapp.com//rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBWVE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--5ddeac0d527d25aad942d2d1860e1ea8943979a3/download.png')
+
+    h = Net::HTTP.new u.host, u.port
+    h.use_ssl = u.scheme == 'https'
+
+    head = h.start do |ua|
+      ua.head u.path
+    end
+
+    puts head['location']
+    #
+  
+    params[:media_url] = head['location'] if message.attachments.present?
     puts 'Message Attachments' if message.attachments.present?
     puts attachments if message.attachments.present?
     puts ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'] if message.attachments.present?

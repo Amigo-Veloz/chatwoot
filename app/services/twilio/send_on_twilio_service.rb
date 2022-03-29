@@ -27,24 +27,15 @@ class Twilio::SendOnTwilioService < Base::SendOnChannelService
       to: contact_inbox.source_id
     }
     
-    if message.attachments.present?
-      puts 'message attachments present'
-
-      u = URI.parse(attachments)
-
-      h = Net::HTTP.new u.host, u.port
-      h.use_ssl = u.scheme == 'https'
-
-      head = h.start do |ua|
-        ua.head u.path
-      
-      puts head['location']
+    # if message.attachments.present?
+    puts 'message attachments present' if message.attachments.present?
   
-      params[:media_url] = head['location']
-      puts 'Message Attachments'
-      puts attachments
-      puts ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'] if message.attachments.present?
-
+    params[:media_url] = attachments if message.attachments.present
+    #  puts 'Message Attachments'
+    #  puts attachments
+    #  puts ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'] if message.attachments.present?
+    
+    
     puts params
     params
   end

@@ -31,6 +31,7 @@ class Twilio::SendOnTwilioService < Base::SendOnChannelService
       # media_url: ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80']
     }
     params[:media_url] = attachments if message.attachments.present?
+    puts params
     params
   end
 

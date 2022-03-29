@@ -10,6 +10,7 @@
     </woot-button>
 
     <report-filter-selector
+      group-by-filter
       :selected-group-by-filter="selectedGroupByFilter"
       :filter-items-list="filterItemsList"
       @date-range-change="onDateRangeChange"
@@ -21,9 +22,11 @@
         :key="metric.NAME"
         :desc="metric.DESC"
         :heading="metric.NAME"
+        :info-text="displayInfoText(metric.KEY)"
         :index="index"
         :on-click="changeSelection"
-        :point="accountSummary[metric.KEY]"
+        :point="displayMetric(metric.KEY)"
+        :trend="calculateTrend(metric.KEY)"
         :selected="index === currentSelection"
       />
     </div>
@@ -33,7 +36,11 @@
         :message="$t('REPORT.LOADING_CHART')"
       />
       <div v-else class="chart-container">
-        <woot-bar v-if="accountReport.data.length" :collection="collection" />
+        <woot-bar
+          v-if="accountReport.data.length"
+          :collection="collection"
+          :chart-options="chartOptions"
+        />
         <span v-else class="empty-state">
           {{ $t('REPORT.NO_ENOUGH_DATA') }}
         </span>
@@ -47,7 +54,8 @@ import { mapGetters } from 'vuex';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns/format';
 import ReportFilterSelector from './components/FilterSelector';
-import { GROUP_BY_FILTER } from './constants';
+import { GROUP_BY_FILTER, METRIC_CHART } from './constants';
+import reportMixin from '../../../../mixins/reportMixin';
 
 const REPORTS_KEYS = {
   CONVERSATIONS: 'conversations_count',
@@ -62,6 +70,7 @@ export default {
   components: {
     ReportFilterSelector,
   },
+  mixins: [reportMixin],
   data() {
     return {
       from: 0,
@@ -104,16 +113,38 @@ export default {
         }
         return format(fromUnixTime(element.timestamp), 'dd-MMM-yyyy');
       });
-      const data = this.accountReport.data.map(element => element.value);
+
+      const datasets = METRIC_CHART[
+        this.metrics[this.currentSelection].KEY
+      ].datasets.map(dataset => {
+        switch (dataset.type) {
+          case 'bar':
+            return {
+              ...dataset,
+              yAxisID: 'y-left',
+              label: this.metrics[this.currentSelection].NAME,
+              data: this.accountReport.data.map(element => element.value),
+            };
+          case 'line':
+            return {
+              ...dataset,
+              yAxisID: 'y-right',
+              label: this.metrics[0].NAME,
+              data: this.accountReport.data.map(element => element.count),
+            };
+          default:
+            return dataset;
+        }
+      });
+
       return {
         labels,
-        datasets: [
-          {
-            label: this.metrics[this.currentSelection].NAME,
-            backgroundColor: '#1f93ff',
-            data,
-          },
-        ],
+        datasets,
+      };
+    },
+    chartOptions() {
+      return {
+        scales: METRIC_CHART[this.metrics[this.currentSelection].KEY].scales,
       };
     },
     metrics() {
@@ -129,6 +160,7 @@ export default {
         NAME: this.$t(`REPORT.METRICS.${key}.NAME`),
         KEY: REPORTS_KEYS[key],
         DESC: this.$t(`REPORT.METRICS.${key}.DESC`),
+        INFO_TEXT: this.$t(`REPORT.METRICS.${key}.INFO_TEXT`),
       }));
     },
   },

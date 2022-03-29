@@ -30,7 +30,7 @@ class Twilio::SendOnTwilioService < Base::SendOnChannelService
     # if message.attachments.present?
     puts 'message attachments present' if message.attachments.present?
     
-    res = Net::HTTP.get_response(URI(attachments)) if message.attachments.present?
+    res = Net::HTTP.get_response(URI(attachments.first)) if message.attachments.present?
     puts res['location'] if message.attachments.present?
 
     params[:media_url] = res['location'] if message.attachments.present?

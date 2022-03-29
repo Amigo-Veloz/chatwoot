@@ -20,8 +20,6 @@ class Twilio::SendOnTwilioService < Base::SendOnChannelService
 
     # puts 'Attachments'
     # puts message.attachments
-
-    
     
     params = {
       body: message.content,
@@ -30,12 +28,11 @@ class Twilio::SendOnTwilioService < Base::SendOnChannelService
       # media_url: ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80']
     }
     
-    if message.attachments.present
-      puts 'Message Attachments'
-      puts message.attachments
-      params[:media_url] = ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80']
-    
-      puts params
+    params[:media_url] = ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'] if message.attachments.present?
+    puts 'Message Attachments' if message.attachments.present?
+    puts message.attachments if message.attachments.present?
+
+    puts params
     params
   end
 

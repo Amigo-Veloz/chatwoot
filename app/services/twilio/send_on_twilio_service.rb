@@ -27,10 +27,7 @@ class Twilio::SendOnTwilioService < Base::SendOnChannelService
       to: contact_inbox.source_id
     }
     
-    hasAttachments = false
-    hasAttachments = true if message.attachments.present?
-    
-    if hasAttachments
+    if message.attachments.present?
       puts 'message attachments present'
 
       u = URI.parse(attachments)
@@ -43,9 +40,9 @@ class Twilio::SendOnTwilioService < Base::SendOnChannelService
       
       puts head['location']
   
-      params[:media_url] = head['location'] if message.attachments.present?
-      puts 'Message Attachments' if message.attachments.present?
-      puts attachments if message.attachments.present?
+      params[:media_url] = head['location']
+      puts 'Message Attachments'
+      puts attachments
       puts ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'] if message.attachments.present?
 
     puts params
